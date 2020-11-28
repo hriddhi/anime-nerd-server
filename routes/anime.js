@@ -32,11 +32,7 @@ router.get('/song/:song_name', (req, res, next) => {
             });
         } catch(err) {
             //await browser.close();
-            res.statusCode = 400;
-            res.setHeader('Content-type','application/json');
-            res.json({
-                err: err
-            });
+            next(err)
         }
     })()
 })
