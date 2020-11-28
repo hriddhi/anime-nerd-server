@@ -7,7 +7,6 @@ router.get('/song/:song_name', (req, res, next) => {
     console.log('uff')
     (async () => {
         try {
-            console.log('in try')
             var browser = await puppeteer.launch({ headless: true });
             var page = await browser.newPage();
           
@@ -26,13 +25,12 @@ router.get('/song/:song_name', (req, res, next) => {
                 return titleLinkArray;
             });
 
-            console.log(news);
             await browser.close();
             res.sendStatus(200)
             res.json({ result: news })
         } catch(err) {
-            console.log(err);
             await browser.close();
+            res.sendStatus(400)
         }
     })()
 })
