@@ -24,14 +24,14 @@ router.get('/song/:song_name', (req, res, next) => {
                 return titleLinkArray;
             });
 
-            await browser.close();
+            //await browser.close();
             res.statusCode = 200;
             res.setHeader('Content-type','application/json');
             res.json({
                 data: data
             });
         } catch(err) {
-            await browser.close();
+            //await browser.close();
             res.statusCode = 400;
             res.setHeader('Content-type','application/json');
             res.json({
