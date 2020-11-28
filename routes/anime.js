@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 router.get('/song/:song_name', (req, res, next) => {
     (async () => {
         try {
-            var browser = await puppeteer.launch({ headless: true });
+            var browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
             var page = await browser.newPage();
           
             await page.goto(`https://aniplaylist.com/` + req.params.song_name);
