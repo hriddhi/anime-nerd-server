@@ -4,8 +4,10 @@ var axios = require('axios');
 const puppeteer = require('puppeteer');
 
 router.get('/song/:song_name', (req, res, next) => {
+    console.log('uff')
     async () => {
         try {
+            console.log('in try')
             var browser = await puppeteer.launch({ headless: true });
             var page = await browser.newPage();
           
