@@ -1,37 +1,46 @@
 var express = require('express');
 var router = express.Router();
 var axios = require('axios');
+const puppeteer = require('puppeteer');
 
-router.get('/:anime_id', (req, res, next) => {
-    axios.get(`https://api.myanimelist.net/v2/anime/${req.params.anime_id}?fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics`, {
-        headers: {
-            'Authorization': 'Bearer ' + req.query.token
+router.get('/song/:song_name', (req, res, next) => {
+    async () => {
+        try {
+            var browser = await puppeteer.launch({ headless: true });
+            var page = await browser.newPage();
+          
+            await page.goto(`https://aniplaylist.com/` + req.params.song_name);
+            await page.waitForSelector("div.card-image");
+
+            var news = await page.evaluate(() => {
+                var LinkNodeList = document.querySelectorAll(`div.card-image a`);
+                var titleLinkArray = [];
+                for (var i = 0; i < LinkNodeList.length; i++) {
+                    titleLinkArray[i] = {
+                        link: LinkNodeList[i].getAttribute("href"),
+                        name: LinkNodeList[i].getAttribute("aria-label")
+                    };
+                }
+                return titleLinkArray;
+            });
+
+            console.log(news);
+            await browser.close();
+            res.sendStatus(200)
+            res.json({ result: news })
+        } catch(err) {
+            console.log(err);
+            await browser.close();
         }
-    })
-    .then(response => {
-        console.log(response.data)
-        res.statusCode = 200
-        res.json(response.data)
-    })
-    .catch(err => {
-        next(err)
-    })
+    }
 })
 
-router.get('/search/:anime', function(req, res, next) {
-    axios.get(`https://api.myanimelist.net/v2/anime?q=${req.params.anime}&fields=id,title,main_picture,alternative_titles,start_date,end_date,synopsis,mean,rank,popularity,num_list_users,num_scoring_users,nsfw,created_at,updated_at,media_type,status,genres,my_list_status,num_episodes,start_season,broadcast,source,average_episode_duration,rating,pictures,background,related_anime,related_manga,recommendations,studios,statistics`, {
-        headers: {
-            'Authorization': 'Bearer ' + req.query.token
-        }
-    })
-    .then(response => {
-        res.statusCode = 200;
-        res.json(response.data.data);
-    })
-    .catch(err => {
-        console.error(err.message)
-        res.json(err);
-    })
-});
+
 
 module.exports = router;
+
+/*
+
+
+
+*/
