@@ -4,7 +4,6 @@ var axios = require('axios');
 const puppeteer = require('puppeteer');
 
 router.get('/song/:song_name', (req, res, next) => {
-    console.log('uff')
     (async () => {
         try {
             var browser = await puppeteer.launch({ headless: true });
@@ -13,7 +12,7 @@ router.get('/song/:song_name', (req, res, next) => {
             await page.goto(`https://aniplaylist.com/` + req.params.song_name);
             await page.waitForSelector("div.card-image");
 
-            var news = await page.evaluate(() => {
+            var data = await page.evaluate(() => {
                 var LinkNodeList = document.querySelectorAll(`div.card-image a`);
                 var titleLinkArray = [];
                 for (var i = 0; i < LinkNodeList.length; i++) {
@@ -26,11 +25,18 @@ router.get('/song/:song_name', (req, res, next) => {
             });
 
             await browser.close();
-            res.sendStatus(200)
-            res.json({ result: news })
+            res.statusCode = 200;
+            res.setHeader('Content-type','application/json');
+            res.json({
+                data: data
+            });
         } catch(err) {
             await browser.close();
-            res.sendStatus(400)
+            res.statusCode = 400;
+            res.setHeader('Content-type','application/json');
+            res.json({
+                err: err
+            });
         }
     })()
 })
