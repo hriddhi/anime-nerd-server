@@ -5,7 +5,7 @@ const puppeteer = require('puppeteer');
 
 router.get('/song/:song_name', (req, res, next) => {
     console.log('uff')
-    async () => {
+    (async () => {
         try {
             console.log('in try')
             var browser = await puppeteer.launch({ headless: true });
@@ -34,7 +34,7 @@ router.get('/song/:song_name', (req, res, next) => {
             console.log(err);
             await browser.close();
         }
-    }
+    })()
 })
 
 
