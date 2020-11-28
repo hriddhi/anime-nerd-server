@@ -10,15 +10,16 @@ router.get('/song/:song_name', (req, res, next) => {
             var page = await browser.newPage();
           
             await page.goto(`https://aniplaylist.com/` + req.params.song_name);
-            await page.waitForSelector("div.card-image");
+            await page.waitForSelector("div.song-card");
 
             var data = await page.evaluate(() => {
-                var LinkNodeList = document.querySelectorAll(`div.card-image a`);
+                var LinkNodeList = document.querySelectorAll(`div.song-card`);
                 var titleLinkArray = [];
                 for (var i = 0; i < LinkNodeList.length; i++) {
                     titleLinkArray[i] = {
-                        link: LinkNodeList[i].getAttribute("href"),
-                        name: LinkNodeList[i].getAttribute("aria-label")
+                        link: LinkNodeList[i].querySelector('.card-image > a').getAttribute('href'),
+                        tag: LinkNodeList[i].querySelector('.card-content > .tag').innerHTML.replace(/\t|\n/g,''),
+                        name: LinkNodeList[i].querySelector('.song-data > strong').innerHTML.replace(/\t|\n/g,'')
                     };
                 }
                 return titleLinkArray;
