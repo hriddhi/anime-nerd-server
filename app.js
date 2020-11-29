@@ -5,6 +5,13 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
 
+const mongoose = require('mongoose');
+const connect = mongoose.connect('mongodb+srv://hriddhi:hriddhi14151@cluster0.3h4nt.mongodb.net/animenerd?retryWrites=true&w=majority', { useUnifiedTopology: true, useNewUrlParser: true });
+
+connect.then((db) => {
+  console.log('Connected successfully to the server');
+}, (err) => { console.log(err); });
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
